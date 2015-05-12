@@ -1,6 +1,4 @@
 /*
- *  arch/arm/mach-bcm2708/include/mach/vcio.h
- *
  *  Copyright (C) 2010 Broadcom
  *
  * This program is free software; you can redistribute it and/or modify
@@ -12,19 +10,13 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef _MACH_BCM2708_VCIO_H
-#define _MACH_BCM2708_VCIO_H
+#ifndef _PLAT_MAILBOX_BCM2708_H
+#define _PLAT_MAILBOX_BCM2708_H
 
 /* Routines to handle I/O via the VideoCore "ARM control" registers
  * (semaphores, doorbells, mailboxes)
  */
-
-#define BCM_VCIO_DRIVER_NAME "bcm2708_vcio"
 
 /* Constants shared with the ARM identifying separate mailbox channels */
 #define MBOX_CHAN_POWER    0 /* for use by the power management interface */
@@ -34,12 +26,14 @@
 #define MBOX_CHAN_COUNT    9
 
 enum {
-	VCMSG_PROCESS_REQUEST 		= 0x00000000
+	VCMSG_PROCESS_REQUEST		= 0x00000000
 };
+
 enum {
-	VCMSG_REQUEST_SUCCESSFUL 	= 0x80000000,
-	VCMSG_REQUEST_FAILED 		= 0x80000001
+	VCMSG_REQUEST_SUCCESSFUL	= 0x80000000,
+	VCMSG_REQUEST_FAILED		= 0x80000001
 };
+
 /* Mailbox property tags */
 enum {
 	VCMSG_PROPERTY_END               = 0x00000000,
@@ -125,41 +119,8 @@ enum {
 	VCMSG_SET_CURSOR_STATE           = 0x00008011,
 };
 
-extern int /*rc*/ bcm_mailbox_read(unsigned chan, uint32_t *data28);
-extern int /*rc*/ bcm_mailbox_write(unsigned chan, uint32_t data28);
-extern int /*rc*/ bcm_mailbox_property(void *data, int size);
-
-#include <linux/ioctl.h>
-
-/*
- * The major device number. We can't rely on dynamic
- * registration any more, because ioctls need to know
- * it.
- */
-#define MAJOR_NUM 100
-
-/*
- * Set the message of the device driver
- */
-#define IOCTL_MBOX_PROPERTY _IOWR(MAJOR_NUM, 0, char *)
-/*
- * _IOWR means that we're creating an ioctl command
- * number for passing information from a user process
- * to the kernel module and from the kernel module to user process
- *
- * The first arguments, MAJOR_NUM, is the major device
- * number we're using.
- *
- * The second argument is the number of the command
- * (there could be several with different meanings).
- *
- * The third argument is the type we want to get from
- * the process to the kernel.
- */
-
-/*
- * The name of the device file
- */
-#define DEVICE_FILE_NAME "vcio"
+int bcm_mailbox_read(unsigned chan, uint32_t *data28);
+int bcm_mailbox_write(unsigned chan, uint32_t data28);
+int bcm_mailbox_property(void *data, int size);
 
 #endif
